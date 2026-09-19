@@ -18,7 +18,7 @@ import { useData } from '../context/DataContext';
 import { useCurrency } from '../context/CurrencyContext';
 
 export default function Home() {
-  const { services, packages, destinations } = useData();
+  const { services, packages, destinations, whyChooseUs, statistics } = useData();
   const { formatPrice } = useCurrency();
   const [packageTab, setPackageTab] = useState('all');
 
@@ -33,48 +33,29 @@ export default function Home() {
       {/* 1. Hero Section with Cutout Plane/Kaaba/Pilgrim and Search Bar */}
       <Hero />
 
-      {/* 2. Statistical Highlights Strip */}
+      {/* 2. Statistical Highlights Strip - Fully Dynamic from Admin Dashboard */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="glass-panel rounded-3xl p-4 sm:p-8 border border-gold-500/30 shadow-2xl">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-center">
-            
-            <div className="pt-4 lg:pt-0">
-              <div className="text-3xl sm:text-4xl font-heading font-extrabold text-gold-400 mb-1">
-                15+
+            {(statistics && statistics.length > 0 ? statistics : [
+              { id: "stat-1", value: "15+", label: "عاماً من الخبرة والريادة", sublabel: "في خدمات السفر والحج والعمرة" },
+              { id: "stat-2", value: "25,000+", label: "معتمر وحاج ومسافر", sublabel: "سافروا معنا بكل طمأنينة" },
+              { id: "stat-3", value: "99.8%", label: "نسبة رضا العملاء", sublabel: "ثقة متوارثة ورعاية لا تنقطع" },
+              { id: "stat-4", value: "50+", label: "شريك طيران وفنادق", sublabel: "تعاقدات حصرية بأسعار تفضيلية" }
+            ]).map((stat) => (
+              <div key={stat.id} className="pt-4 lg:pt-0">
+                <div className="text-3xl sm:text-4xl font-heading font-extrabold text-gold-400 mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-xs sm:text-sm font-semibold text-white">{stat.label}</div>
+                <div className="text-[11px] text-slate-400">{stat.sublabel}</div>
               </div>
-              <div className="text-xs sm:text-sm font-semibold text-white">عاماً من الخبرة والريادة</div>
-              <div className="text-[11px] text-slate-400">في خدمات السفر والحج والعمرة</div>
-            </div>
-
-            <div className="pt-4 lg:pt-0">
-              <div className="text-3xl sm:text-4xl font-heading font-extrabold text-gold-400 mb-1">
-                25,000+
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-white">معتمر وحاج ومسافر</div>
-              <div className="text-[11px] text-slate-400">سافروا معنا بكل طمأنينة</div>
-            </div>
-
-            <div className="pt-4 lg:pt-0">
-              <div className="text-3xl sm:text-4xl font-heading font-extrabold text-gold-400 mb-1">
-                99.8%
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-white">نسبة رضا العملاء</div>
-              <div className="text-[11px] text-slate-400">ثقة متوارثة ورعاية لا تنقطع</div>
-            </div>
-
-            <div className="pt-4 lg:pt-0">
-              <div className="text-3xl sm:text-4xl font-heading font-extrabold text-gold-400 mb-1">
-                50+
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-white">شريك طيران وفنادق</div>
-              <div className="text-[11px] text-slate-400">تعاقدات حصرية بأسعار تفضيلية</div>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 3. Why Choose Wahbeen? (لماذا تختار وكالة وهبين؟) */}
+      {/* 3. Why Choose Wahbeen? (لماذا تختار وكالة وهبين؟) - Fully Dynamic from Admin */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-navy-900 border border-gold-500/30 text-gold-400 text-xs font-semibold mb-3">
@@ -90,37 +71,31 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div className="glass-panel rounded-3xl p-6 border border-gold-500/20 hover:border-gold-500/50 transition-all text-right group">
-            <div className="w-12 h-12 rounded-2xl bg-navy-900 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 transition-colors">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-heading font-bold text-white mb-2">اعتماد رسمي وتراخيص قانونية</h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              وكالة معتمدة رسمياً ومسجلة لدى وزارات الأوقاف والإرشاد، النقل، وهيئات الطيران المدني، مما يضمن حقوقك الكاملة في كل رحلة.
-            </p>
-          </div>
+          {(whyChooseUs && whyChooseUs.length > 0 ? whyChooseUs : [
+            { id: "why-1", icon: "ShieldCheck", title: "اعتماد رسمي وتراخيص قانونية", description: "وكالة معتمدة رسمياً ومسجلة لدى وزارات الأوقاف والإرشاد، النقل، وهيئات الطيران المدني، مما يضمن حقوقك الكاملة في كل رحلة." },
+            { id: "why-2", icon: "HeartHandshake", title: "فنادق صف أول وقريبة من الحرم", description: "تعاقدات مباشرة مع أشهر أبراج وفنادق مكة المكرمة والمدينة المنورة المطلة والمجاورة لساحات الحرم لتوفير أقصى درجات الراحة للمعتمرين." },
+            { id: "why-3", icon: "Clock", title: "متابعة وإشراف على مدار 24 ساعة", description: "فريق إداري وميداني مرافق لك منذ لحظة إقلاع الرحلة وحتى العودة، لضمان معالجة أي طارئ وتلبية كافة الاحتياجات." }
+          ]).map((item, idx) => {
+            const renderIcon = (name) => {
+              if (name === 'ShieldCheck') return <ShieldCheck className="w-6 h-6" />;
+              if (name === 'HeartHandshake') return <HeartHandshake className="w-6 h-6" />;
+              if (name === 'Clock') return <Clock className="w-6 h-6" />;
+              if (name === 'Award') return <Award className="w-6 h-6" />;
+              return <Sparkles className="w-6 h-6" />;
+            };
 
-          <div className="glass-panel rounded-3xl p-6 border border-gold-500/20 hover:border-gold-500/50 transition-all text-right group">
-            <div className="w-12 h-12 rounded-2xl bg-navy-900 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 transition-colors">
-              <HeartHandshake className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-heading font-bold text-white mb-2">فنادق صف أول وقريبة من الحرم</h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              تعاقدات مباشرة مع أشهر أبراج وفنادق مكة المكرمة والمدينة المنورة المطلة والمجاورة لساحات الحرم لتوفير أقصى درجات الراحة للمعتمرين.
-            </p>
-          </div>
-
-          <div className="glass-panel rounded-3xl p-6 border border-gold-500/20 hover:border-gold-500/50 transition-all text-right group">
-            <div className="w-12 h-12 rounded-2xl bg-navy-900 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 transition-colors">
-              <Clock className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-heading font-bold text-white mb-2">متابعة وإشراف على مدار 24 ساعة</h3>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              فريق إداري وميداني مرافق لك منذ لحظة إقلاع الرحلة وحتى العودة، لضمان معالجة أي طارئ وتلبية كافة الاحتياجات.
-            </p>
-          </div>
-
+            return (
+              <div key={item.id || idx} className="glass-panel rounded-3xl p-6 border border-gold-500/20 hover:border-gold-500/50 transition-all text-right group">
+                <div className="w-12 h-12 rounded-2xl bg-navy-900 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-4 group-hover:bg-gold-500 group-hover:text-navy-950 transition-colors">
+                  {renderIcon(item.icon)}
+                </div>
+                <h3 className="text-lg font-heading font-bold text-white mb-2">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </section>
 

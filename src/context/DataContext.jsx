@@ -11,7 +11,9 @@ import {
   initialTestimonials,
   initialPartners,
   initialJobs,
-  initialBookings
+  initialBookings,
+  initialWhyChooseUs,
+  initialStatistics
 } from '../utils/seedData';
 
 const DataContext = createContext();
@@ -24,7 +26,12 @@ export const DataProvider = ({ children }) => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        return {
+          ...parsed,
+          whyChooseUs: parsed.whyChooseUs || initialWhyChooseUs,
+          statistics: parsed.statistics || initialStatistics
+        };
       }
     } catch (e) {
       console.error('Error loading stored agency data', e);
@@ -42,6 +49,8 @@ export const DataProvider = ({ children }) => {
       partners: initialPartners,
       jobs: initialJobs,
       bookings: initialBookings,
+      whyChooseUs: initialWhyChooseUs,
+      statistics: initialStatistics,
       subscribers: [
         { email: 'customer1@example.com', date: '2026-09-10' },
         { email: 'traveler.aden@gmail.com', date: '2026-09-12' }
@@ -209,10 +218,95 @@ export const DataProvider = ({ children }) => {
     }));
   };
 
+  const updateFaq = (index, updatedFaq) => {
+    setData((prev) => ({
+      ...prev,
+      faqs: prev.faqs.map((f, i) => (i === index ? { ...f, ...updatedFaq } : f))
+    }));
+  };
+
   const deleteFaq = (index) => {
     setData((prev) => ({
       ...prev,
       faqs: prev.faqs.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Destination Management (وجهات سياحية ساحرة)
+  const addDestination = (dest) => {
+    const id = dest.id || `dest-${Date.now()}`;
+    setData((prev) => ({
+      ...prev,
+      destinations: [{ ...dest, id }, ...prev.destinations]
+    }));
+  };
+
+  const updateDestination = (id, updatedFields) => {
+    setData((prev) => ({
+      ...prev,
+      destinations: prev.destinations.map((d) => (d.id === id ? { ...d, ...updatedFields } : d))
+    }));
+  };
+
+  const deleteDestination = (id) => {
+    setData((prev) => ({
+      ...prev,
+      destinations: prev.destinations.filter((d) => d.id !== id)
+    }));
+  };
+
+  // Service Management (خدمات سفر راقية)
+  const addService = (service) => {
+    const id = service.id || `service-${Date.now()}`;
+    const slug = service.slug || id;
+    setData((prev) => ({
+      ...prev,
+      services: [{ ...service, id, slug }, ...prev.services]
+    }));
+  };
+
+  const updateService = (id, updatedFields) => {
+    setData((prev) => ({
+      ...prev,
+      services: prev.services.map((s) => (s.id === id ? { ...s, ...updatedFields } : s))
+    }));
+  };
+
+  const deleteService = (id) => {
+    setData((prev) => ({
+      ...prev,
+      services: prev.services.filter((s) => s.id !== id)
+    }));
+  };
+
+  // Why Choose Us Management (لماذا يختار المسافرون وكالة وهبين؟)
+  const addWhyChooseUs = (item) => {
+    const id = item.id || `why-${Date.now()}`;
+    setData((prev) => ({
+      ...prev,
+      whyChooseUs: [...(prev.whyChooseUs || []), { ...item, id }]
+    }));
+  };
+
+  const updateWhyChooseUs = (id, updatedFields) => {
+    setData((prev) => ({
+      ...prev,
+      whyChooseUs: (prev.whyChooseUs || []).map((w) => (w.id === id ? { ...w, ...updatedFields } : w))
+    }));
+  };
+
+  const deleteWhyChooseUs = (id) => {
+    setData((prev) => ({
+      ...prev,
+      whyChooseUs: (prev.whyChooseUs || []).filter((w) => w.id !== id)
+    }));
+  };
+
+  // Statistics Management (الإحصائيات البارزة)
+  const updateStatistic = (id, updatedFields) => {
+    setData((prev) => ({
+      ...prev,
+      statistics: (prev.statistics || []).map((s) => (s.id === id ? { ...s, ...updatedFields } : s))
     }));
   };
 
@@ -260,6 +354,8 @@ export const DataProvider = ({ children }) => {
       partners: initialPartners,
       jobs: initialJobs,
       bookings: initialBookings,
+      whyChooseUs: initialWhyChooseUs,
+      statistics: initialStatistics,
       subscribers: [
         { email: 'customer1@example.com', date: '2026-09-10' }
       ]
@@ -304,7 +400,18 @@ export const DataProvider = ({ children }) => {
       updateBlogPost,
       deleteBlogPost,
       addFaq,
+      updateFaq,
       deleteFaq,
+      addDestination,
+      updateDestination,
+      deleteDestination,
+      addService,
+      updateService,
+      deleteService,
+      addWhyChooseUs,
+      updateWhyChooseUs,
+      deleteWhyChooseUs,
+      updateStatistic,
       exportBookingsCSV,
       resetToSeeds,
       getBookingWhatsAppUrl
