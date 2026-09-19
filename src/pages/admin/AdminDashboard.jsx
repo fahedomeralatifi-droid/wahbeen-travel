@@ -23,7 +23,9 @@ import {
   DollarSign, 
   Save, 
   RefreshCw,
-  Eye
+  Eye,
+  Lock,
+  Key
 } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { useCurrency } from '../../context/CurrencyContext';
@@ -71,8 +73,13 @@ export default function AdminDashboard() {
     localStorage.removeItem('wahbeen_admin_auth');
     localStorage.removeItem('wahbeen_admin_user');
     setIsAuthenticated(false);
-    navigate('/');
+    navigate('/admin/login');
   };
+
+  // Prevent any flash of dashboard content if unauthenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   // Active Tab
   const [activeTab, setActiveTab] = useState('bookings');
@@ -84,6 +91,13 @@ export default function AdminDashboard() {
   // Editing settings state
   const [settingsForm, setSettingsForm] = useState(siteSettings);
   const [settingsSaved, setSettingsSaved] = useState(false);
+
+  // Admin Credentials & Security State
+  const [adminSecurityForm, setAdminSecurityForm] = useState(() => ({
+    email: localStorage.getItem('wahbeen_custom_admin_email') || 'admin@wahbeen.com',
+    password: localStorage.getItem('wahbeen_custom_admin_password') || 'wahbeen2026'
+  }));
+  const [securitySaved, setSecuritySaved] = useState(false);
 
   // New Package Form State
   const [newPkgModal, setNewPkgModal] = useState(false);
@@ -883,6 +897,71 @@ export default function AdminDashboard() {
                       className="w-full px-3 py-2 rounded-lg bg-navy-800 border border-white/10 text-white font-mono"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Admin Security & Password Settings Card */}
+              <div className="p-6 rounded-2xl bg-navy-900/90 border border-gold-500/30 space-y-4 shadow-xl">
+                <div className="flex items-center gap-2 text-gold-400 border-b border-white/10 pb-3">
+                  <Lock className="w-4 h-4" />
+                  <h3 className="font-heading font-bold text-sm text-white">بيانات الدخول وكلمة المرور للوحة التحكم</h3>
+                </div>
+
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  يمكنك من هنا تخصيص البريد الإلكتروني وكلمة المرور الخاصة بدخولك إلى لوحة التحكم لضمان أعلى درجات الأمان:
+                </p>
+
+                {securitySaved && (
+                  <div className="p-3 rounded-xl bg-green-950/80 border border-green-500/50 text-green-300 text-xs flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>تم تحديث بيانات الدخول وكلمة المرور بنجاح!</span>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div>
+                    <label className="block text-slate-300 mb-1.5 font-bold">البريد الإلكتروني للدخول</label>
+                    <input
+                      type="email"
+                      value={adminSecurityForm.email}
+                      onChange={(e) => setAdminSecurityForm({ ...adminSecurityForm, email: e.target.value })}
+                      placeholder="admin@wahbeen.com"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-navy-800 border border-white/10 text-white font-mono text-left"
+                      dir="ltr"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 mb-1.5 font-bold">كلمة المرور الجديدة</label>
+                    <input
+                      type="text"
+                      value={adminSecurityForm.password}
+                      onChange={(e) => setAdminSecurityForm({ ...adminSecurityForm, password: e.target.value })}
+                      placeholder="كلمة مرور قوية"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-navy-800 border border-white/10 text-white font-mono text-left"
+                      dir="ltr"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-start">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!adminSecurityForm.email.trim() || !adminSecurityForm.password.trim()) {
+                        alert('يرجى كتابة البريد الإلكتروني وكلمة المرور');
+                        return;
+                      }
+                      localStorage.setItem('wahbeen_custom_admin_email', adminSecurityForm.email.trim());
+                      localStorage.setItem('wahbeen_custom_admin_password', adminSecurityForm.password.trim());
+                      setSecuritySaved(true);
+                      setTimeout(() => setSecuritySaved(false), 4000);
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-950 font-bold text-xs flex items-center gap-2 shadow transition-all"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    <span>حفظ بيانات الدخول الجديدة</span>
+                  </button>
                 </div>
               </div>
 

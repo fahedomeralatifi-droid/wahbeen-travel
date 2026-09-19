@@ -12,7 +12,8 @@ import {
   MessageCircle,
   Clock,
   Sparkles,
-  CalendarCheck
+  CalendarCheck,
+  Lock
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 
@@ -471,11 +472,22 @@ export default function Footer() {
             <strong className="text-gold-400 font-heading font-bold">م. ابن عمر</strong>
           </div>
 
-          {/* Legal Links */}
-          <div className="flex items-center gap-4 text-[11px]">
+          {/* Legal Links & Discreet Hidden Admin Entry */}
+          <div className="flex items-center gap-3 text-[11px]">
             <Link to="/privacy" className="hover:text-gold-400">سياسة الخصوصية</Link>
             <span>•</span>
             <Link to="/terms" className="hover:text-gold-400">الشروط والأحكام</Link>
+            <span>•</span>
+            {/* Hidden Admin Entry Button: Blends into footer, glows on hover */}
+            <Link 
+              to="/admin/login" 
+              title="بوابة التحكم والإدارة"
+              aria-label="بوابة الإدارة"
+              className="opacity-25 hover:opacity-100 hover:text-gold-400 transition-all duration-300 p-1.5 rounded-lg hover:bg-white/5 flex items-center gap-1 group text-slate-500"
+            >
+              <Lock className="w-3 h-3 group-hover:text-gold-400 group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] hidden group-hover:inline transition-all text-gold-400/90 font-medium">لوحة التحكم</span>
+            </Link>
           </div>
 
         </div>
